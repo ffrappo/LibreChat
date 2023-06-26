@@ -43,3 +43,4 @@ jobs:
     needs: build
     uses: ./.github/workflows/update-staging-ecs.yml
     name: Update ECS Service
+    secrets: inherit
