@@ -31,17 +31,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-1
 
-      # Run docker-compose build
-      - name: Build Docker images
-        run: |
-          cp .env.example .env
-          docker-compose build
-      
       # Get Tag Name
       - name: Get Tag Name
         id: tag_name
         run: echo "TAG_NAME=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
+      # Run docker-compose build
+      - name: Build Docker images
+        run: |
+          cp .env.example .env
+          echo "version=${{ env.TAG_NAME }}" > client/version.txt
+          docker-compose build
+      
       # Tag it properly before push to github
       - name: tag image and push
         run: |
