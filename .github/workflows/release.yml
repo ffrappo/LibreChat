@@ -40,7 +40,7 @@ jobs:
       - name: Build Docker images
         run: |
           cp .env.example .env
-          echo "version=${{ env.TAG_NAME }}" > client/version.txt
+          echo "version=${{ env.TAG_NAME }}" > client/public/assets/version.txt
           docker-compose build
       
       # Tag it properly before push to github
