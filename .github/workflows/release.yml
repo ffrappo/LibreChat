@@ -2,10 +2,7 @@ name: Production Release to http://aitok.us in AWS Singapore
 on:
   release:
     types:
-      - created
-    # Ensure that the release is not marked as a pre-release
-    exclude:
-      - prerelease
+      - released  # Trigger the workflow on a published release, skipping prereleases
 
 jobs:
   build:
