@@ -16,7 +16,6 @@ export default function SharedConvo() {
   const [conversation, setConversation] = useState<TConversation | null>(null);
   const [msgTree, setMsgTree] = useState<TMessage[] | null>(null);
   const [user, setUser] = useState<TUser | null>(null);
-  const [shareLink, setShareLink] = useState<string>('');
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [pageTitle, setPageTitle] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
@@ -35,9 +34,11 @@ export default function SharedConvo() {
 
   const copyShareLinkHandler = () => {
     if (copied) return;
-    navigator.clipboard.writeText(shareLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (conversation) {
+      navigator.clipboard.writeText(window.location.host + `/chat/share/${conversation.conversationId}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   }
 
   async function fetchConversation() {
@@ -101,8 +102,6 @@ export default function SharedConvo() {
       setIsPrivate(false);
       fetchMessagesByConvoId(conversation.conversationId);
       fetchConvoUser(conversation.user);
-      setShareLink(process.env.NODE_ENV === 'dev' ? `localhost:3090/chat/share/${conversation.conversationId}` :
-        `chat.aitok.us/chat/share/${conversation.conversationId}`);
       setPageTitle(conversation.title);
     } else {
       setIsPrivate(true);

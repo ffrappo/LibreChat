@@ -26,7 +26,6 @@ export default function Recommendations({ type: leaderboardType }: {type: string
   const [user, setUser] = useState<TUser | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [lastLeaderboardType, setLastLeaderboardType] = useState<string | null>(null);
-  const [shareLink, setShareLink] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
 
   const [liked, setLiked] = useState<boolean>(false);
@@ -178,9 +177,11 @@ export default function Recommendations({ type: leaderboardType }: {type: string
   const prevConvo = () => convoIdx === 0 ? setConvoIdx(convoDataLength - 1) : setConvoIdx(convoIdx - 1);
   const copyShareLinkHandler = () => {
     if (copied) return;
-    navigator.clipboard.writeText(shareLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (convoData) {
+      navigator.clipboard.writeText(window.location.host + `/chat/share/${convoData[convoIdx].conversationId}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   }
 
   // Get recent conversations
@@ -194,8 +195,6 @@ export default function Recommendations({ type: leaderboardType }: {type: string
     if (convoData) {
       fetchMessagesByConvoId(convoData[convoIdx].conversationId);
       fetchConvoUser(convoData[convoIdx].user);
-      setShareLink(process.env.NODE_ENV === 'dev' ? `localhost:3090/chat/share/${convoData[convoIdx].conversationId}` :
-        `chat.aitok.us/chat/share/${convoData[convoIdx].conversationId}`);
     }
   }, [convoData, convoIdx]);
 
