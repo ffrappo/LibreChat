@@ -191,7 +191,7 @@ export default function Nav({ navVisible, setNavVisible }) {
   }
 
   const openWidgetHandler = (type) => () => {
-    if (location.pathname.substring(1, 5) !== 'chat') {
+    if (location.pathname.substring(1, 5) !== 'chat' || location.pathname.substring(0, 11) === '/chat/share') {
       newConversation();
       navigate('/chat/new');
       setWidget(`${type}`);

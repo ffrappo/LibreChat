@@ -94,7 +94,7 @@ export default function SharedConvo() {
   // Fetch conversation on mount
   useEffect(() => {
     fetchConversation();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     if (conversation && !conversation.isPrivate) {
