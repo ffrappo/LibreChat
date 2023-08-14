@@ -118,44 +118,44 @@ export default function SharedConvo() {
         </div>
       ) : (
         <>
-          <div className='grid gap-1 w-full sticky bg-white top-0 z-30 items-center md:gap-0 md:grid-col md:grid-cols-4'>
-            <div className='flex flex-row justify-center items-center gap-2 md:col-span-1 md:grid md:grid-col md:grid-cols-2 md:w-4/5 md:justify-self-end hover:underline'>
-              {user && (
-                <>
-                  <button
-                    title={user?.username}
-                    style={{
-                      width: 30,
-                      height: 30
-                    }}
-                    className={'justify-self-end col-span-1 relative flex items-center justify-center'}
-                    onClick={ navigateToProfile }
-                  >
-                    <img
-                      className="rounded-sm"
-                      src={
-                        user?.avatar ||
-                        `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name}&fontFamily=Verdana&fontSize=36`
-                      }
-                      alt="avatar"
-                    />
-                  </button>
-                  <button
-                    onClick={ navigateToProfile }
-                    className='justify-self-start col-span-1'
-                  >
-                    {user?.username}
-                  </button>
-                </>
-              )}
-            </div>
+          <div className='grid grid-row w-full gap-1 sticky bg-white top-0 z-30 justify-center items-center'>
             <h1
               id="landing-title"
-              className="md:mb-3 ml-auto mr-auto mt-0.5 flex gap-2 text-center text-3xl font-semibold sm:mb-2 md:mt-0.5 md:col-span-2"
+              className="md:mb-3 ml-auto mr-auto mt-0.5 flex gap-2 text-center text-3xl font-semibold sm:mb-2 md:mt-0.5"
             >
               {conversation ? conversation.title : ''}
             </h1>
-            <div className='my-2 flex flex-row justify-self-center gap-2 md:my-0 md:justify-self-start md:col-span-1'>
+            <div className='my-2 flex flex-row justify-self-center gap-2 md:my-0'>
+              <div className='flex flex-row justify-center items-center gap-2 md:mb-2 hover:underline'>
+                {user && (
+                  <>
+                    <button
+                      title={user?.username}
+                      style={{
+                        width: 30,
+                        height: 30
+                      }}
+                      className={'justify-self-end col-span-1 relative flex items-center justify-center'}
+                      onClick={ navigateToProfile }
+                    >
+                      <img
+                        className="rounded-sm"
+                        src={
+                          user?.avatar ||
+                          `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name}&fontFamily=Verdana&fontSize=36`
+                        }
+                        alt="avatar"
+                      />
+                    </button>
+                    <button
+                      onClick={ navigateToProfile }
+                      className='justify-self-start col-span-1'
+                    >
+                      {user?.username}
+                    </button>
+                  </>
+                )}
+              </div>
               <button>
                 <svg
                   onClick={() => {setLiked(!liked)}}
