@@ -5,14 +5,12 @@ const requireJwtAuth = (req, res, next) => {
     if (err) {
       console.log(err);
     }
+
     if (!user) {
-      console.log('(requireJwtAuth): No user');
+      req.user = false; // Assigns false to req.user if no user logged in
+    } else {
+      req.user = user; // Assigns the user object to req.user if user logged in
     }
-    // Assigns a value to req.user no matter what
-    // Known possible values:
-    //   false: no logged in user
-    //   user object: logged in user
-    req.user = user;
     next();
   })(req, res, next);
 }
