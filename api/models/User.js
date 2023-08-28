@@ -102,6 +102,18 @@ const userSchema = mongoose.Schema(
       type: Object,
       default: {}
     },
+    credits: {
+      type: Number,
+      default: 0
+    },
+    creditLimits: {
+      type: Object,
+      default: {
+        referrals: 2000,
+        profileHits: 1000,
+        date: new Date(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate())
+      }
+    }
   },
   { timestamps: true }
 );
@@ -128,7 +140,9 @@ userSchema.methods.toJSON = function () {
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     followers: this.followers,
-    following: this.following
+    following: this.following,
+    credits: this.credits,
+    creditLimits: this.creditLimits
   };
 };
 
