@@ -3,7 +3,7 @@ const Token = require('../../models/schema/tokenSchema');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const { registerSchema } = require('../../strategies/validators');
-const { sendEmail } = require('../../utils');
+const { sendEmail, addReferralsCredit } = require('../../utils');
 const config = require('../../../config/loader');
 const domains = config.domains;
 
@@ -98,7 +98,7 @@ const registerUser = async (user) => {
       const follower = {};
       follower[`followers.${registrationResult.id}`] = { name: registrationResult.name, username: registrationResult.username };
 
-      await User.updateOne(
+      const updateResponse = await User.updateOne(
         { _id: refBy },
         {
           $push: { referrals: registrationResult.id },
@@ -106,6 +106,10 @@ const registerUser = async (user) => {
           $set: follower
         }
       );
+
+      if (updateResponse.acknowledged) {
+        addReferralsCredit(refBy);
+      }
     }
     return { status: 200, user: newUser };
   } catch (err) {

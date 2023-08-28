@@ -3,6 +3,7 @@ const cryptoUtils = require('./crypto');
 const { tiktokenModels, maxTokensMap } = require('./tokens');
 const sendEmail = require('./sendEmail');
 const abortMessage = require('./abortMessage');
+const { addReferralsCredit, addProfileHitsCredit } = require('./credits');
 
 module.exports = {
   ...cryptoUtils,
@@ -10,5 +11,7 @@ module.exports = {
   maxTokensMap,
   tiktokenModels,
   sendEmail,
-  abortMessage
+  abortMessage,
+  addProfileHitsCredit,
+  addReferralsCredit
 }
