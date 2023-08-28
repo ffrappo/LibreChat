@@ -71,6 +71,7 @@ config.validate(); // Validate the config
   app.use('/api/plugins', routes.plugins);
   app.use('/api/config', routes.config);
   app.use('/api/leaderboard', routes.leaderboard);
+  app.use('/api/credits', routes.credits);
 
   // static files
   app.get('/*', function (req, res) {

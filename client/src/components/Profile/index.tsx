@@ -115,6 +115,20 @@ function ProfileContent() {
   }
 
   useEffect(() => {
+    if (userId && user && (userId !== user.id)) {
+      fetch('/api/credits/profileHits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userId
+        })
+      });
+    }
+  }, [userId, user]);
+
+  useEffect(() => {
     if (getUserByIdQuery.isSuccess) {
       setProfileUser(getUserByIdQuery.data);
 

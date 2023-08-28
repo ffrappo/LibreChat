@@ -12,6 +12,7 @@ const plugins = require('./plugins');
 const user = require('./user');
 const config = require('./config');
 const leaderboard = require('./leaderboard');
+const credits = require('./credits');
 
 module.exports = {
   search,
@@ -27,5 +28,6 @@ module.exports = {
   endpoints,
   plugins,
   config,
-  leaderboard
+  leaderboard,
+  credits
 };
