@@ -52,6 +52,12 @@ export default function TextChat({ isSearchView = false }) {
   }, [isSubmitting]);
 
   const submitMessage = () => {
+    // Deduct 200 credits if using gpt-4
+    // Assumes that user has more than 200 credits
+    if (conversation.model === 'gpt-4') {
+      user.creditBalance = user.creditBalance - 200;
+    }
+
     ask({ text });
     setText('');
   };

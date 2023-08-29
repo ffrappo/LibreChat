@@ -85,7 +85,22 @@ async function addProfileHitsCredit(id) {
 
 }
 
+// Add 200 to gpt-4 credit spending
+async function spendGPT4Credits(id) {
+  try {
+    const response = await User.findByIdAndUpdate(
+      id,
+      { $inc: { 'credits.spendings.gpt4': 200 } },
+      { new: true }
+    );
+    console.log(response.credits);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   addReferralsCredit,
-  addProfileHitsCredit
+  addProfileHitsCredit,
+  spendGPT4Credits
 }
