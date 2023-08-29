@@ -186,13 +186,18 @@ function ProfileContent() {
               alt="avatar"
             />
           </div>
-          <div className='flex flex-col justify-center mx-3 gap-4 dark:text-gray-200 text-xl'>
+          <div className='flex flex-col justify-center mx-3 gap-2 dark:text-gray-200 text-xl'>
             <div>
               {profileUser?.name}
             </div>
             <div>
               {profileUser?.username}
             </div>
+            {userId === user?.id && (
+              <div className='text-base text-gray-600 dark:text-gray-400'>
+                {localize(lang, 'com_ui_credits', profileUser?.creditBalance.toString() || '0')}
+              </div>
+            )}
           </div>
         </div>
         {/*Copy profile page URL button */}

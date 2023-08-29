@@ -2,6 +2,12 @@ const { updateUserPluginsService } = require('../services/UserService');
 const { updateUserPluginAuth, deleteUserPluginAuth } = require('../services/PluginService');
 const User = require('../../models/User');
 
+function getCreditBalance(credits) {
+  if (!credits) return 0;
+  const { earnings, spendings } = credits;
+  return(Object.values(earnings).reduce((a, b) => a + b, 0) - Object.values(spendings).reduce((a, b) => a + b, 0));
+}
+
 const getUserController = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -13,7 +19,8 @@ const getUserController = async (req, res) => {
       const username = user.username;
       const followers = user.followers;
       const following = user.following;
-      res.status(200).send({ id, name, username, followers, following });
+      const creditBalance = getCreditBalance(user.credits);
+      res.status(200).send({ id, name, username, followers, following, creditBalance });
     }
   } catch (error) {
     console.log(error);

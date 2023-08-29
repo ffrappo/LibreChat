@@ -1,6 +1,7 @@
 // English phrases
 
 export default {
+  com_ui_credits: 'Credits: {0}',
   com_ui_following_no_convo: 'The users you are following does not have any public conversations.',
   com_ui_no_following: 'You are not following any users yet.',
   com_ui_my_following: 'Following',

@@ -118,6 +118,12 @@ userSchema.set('toJSON', {
   }
 });
 
+function getCreditBalance(credits) {
+  if (!credits) return 0;
+  const { earnings, spendings } = credits;
+  return(Object.values(earnings).reduce((a, b) => a + b, 0) - Object.values(spendings).reduce((a, b) => a + b, 0));
+}
+
 userSchema.methods.toJSON = function () {
   return {
     id: this._id,
@@ -134,6 +140,7 @@ userSchema.methods.toJSON = function () {
     followers: this.followers,
     following: this.following,
     credits: this.credits,
+    creditBalance: getCreditBalance(this.credits)
   };
 };
 

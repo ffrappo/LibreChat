@@ -162,6 +162,8 @@ export type TUser = {
   updatedAt: string;
   followers: object;
   following: object;
+  credits: object;
+  creditBalance: number;
 };
 
 export type TGetConversationsResponse = {
