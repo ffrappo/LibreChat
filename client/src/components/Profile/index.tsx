@@ -115,7 +115,7 @@ function ProfileContent() {
   }
 
   useEffect(() => {
-    if (userId && user && (userId !== user.id)) {
+    if (userId !== user?.id) {
       fetch('/api/credits/profileHits', {
         method: 'POST',
         headers: {
