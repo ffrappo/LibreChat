@@ -177,7 +177,7 @@ export default function TextChat({ isSearchView = false }) {
                 <SubmitButton
                   submitMessage={submitMessage}
                   handleStopGenerating={handleStopGenerating}
-                  disabled={disabled || isNotAppendable || (conversation.model === 'gpt-4' && user.creditBalance < 200)}
+                  disabled={disabled || isNotAppendable || (conversation.model === 'gpt-4' && user?.creditBalance < 200)}
                   isSubmitting={isSubmitting}
                   endpointsConfig={endpointsConfig}
                   endpoint={conversation?.endpoint}
