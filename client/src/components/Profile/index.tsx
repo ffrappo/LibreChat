@@ -214,7 +214,6 @@ function ProfileContent() {
       alert(`An error occurred: ${error}`);
     }
     setIsEditing(false);
-
   };
 
   useEffect(() => {
@@ -294,29 +293,32 @@ function ProfileContent() {
               alt="avatar"
             />
           </div>
+
           <div className="mx-3 flex flex-col justify-center gap-4 text-xl dark:text-gray-200">
             <div>{profileUser?.name}</div>
-            <div onClick={handleUsernameClick}>
-              {isEditing ? (
-                <div>
-                  <form onSubmit={handleChangeUsername}>
-                    <input
-                      className='text-black pl-2'
-                      type="text"
-                      id="newUsernameInput"
-                      placeholder="Enter new username"
-                      value={newUsername}
-                      onChange={handleUsernameChange}
-                    />
-                    <button className='pl-4' type="submit">
-                      <CheckMark />
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <div>{newUsername}</div>
-              )}
-            </div>
+            {userId === user?.id ? (
+              <div onClick={handleUsernameClick}>
+                {isEditing ? (
+                  <div>
+                    <form onSubmit={handleChangeUsername}>
+                      <input
+                        className="pl-2 text-black"
+                        type="text"
+                        id="newUsernameInput"
+                        placeholder="Enter new username"
+                        value={newUsername}
+                        onChange={handleUsernameChange}
+                      />
+                      <button className="pl-4" type="submit">
+                        <CheckMark />
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <div>{newUsername}</div>
+                )}
+              </div>
+            ) : <div>{profileUser?.username}</div>}
           </div>
         </div>
 
@@ -456,15 +458,21 @@ function ProfileContent() {
                 {expanded ? (
                   <div>
                     <div className="pl-1">{bio}</div>
-                    <button className="ml-2 text-green-500 hover:text-green-300" onClick={toggleExpand}>
-           Show Less
+                    <button
+                      className="ml-2 text-green-500 hover:text-green-300"
+                      onClick={toggleExpand}
+                    >
+                      Show Less
                     </button>
                   </div>
                 ) : (
                   <div className="pl-1">
                     {bio.length > 100 ? `${bio.slice(0, 100)}...` : bio}
                     {bio.length > 100 && (
-                      <button className="ml-2 text-green-500 hover:text-green-300" onClick={toggleExpand}>
+                      <button
+                        className="ml-2 text-green-500 hover:text-green-300"
+                        onClick={toggleExpand}
+                      >
                         {expanded ? 'Show Less' : 'Show More'}
                       </button>
                     )}
