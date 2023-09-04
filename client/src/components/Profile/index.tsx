@@ -12,7 +12,7 @@ import { localize } from '~/localization/Translation';
 import PublicConversations from './PublicConversations';
 import { Spinner } from '../svg';
 import UserIcon from '../svg/UserIcon';
-import Checkmark from '../svg/Checkmark';
+import CheckMark from '../svg/CheckMark';
 import { log } from 'console';
 import EditIcon from '../svg/EditIcon';
 
@@ -296,27 +296,29 @@ function ProfileContent() {
           </div>
           <div className="mx-3 flex flex-col justify-center gap-4 text-xl dark:text-gray-200">
             <div>{profileUser?.name}</div>
-            <div onClick={handleUsernameClick}>
-              {isEditing ? (
-                <div>
-                  <form onSubmit={handleChangeUsername}>
-                    <input
-                      className='text-black pl-2'
-                      type="text"
-                      id="newUsernameInput"
-                      placeholder="Enter new username"
-                      value={newUsername}
-                      onChange={handleUsernameChange}
-                    />
-                    <button className='pl-4' type="submit">
-                      <Checkmark />
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <div>{newUsername}</div>
-              )}
-            </div>
+            {userId === user?.id ? (
+              <div onClick={handleUsernameClick}>
+                {isEditing ? (
+                  <div>
+                    <form onSubmit={handleChangeUsername}>
+                      <input
+                        className="pl-2 text-black"
+                        type="text"
+                        id="newUsernameInput"
+                        placeholder="Enter new username"
+                        value={newUsername}
+                        onChange={handleUsernameChange}
+                      />
+                      <button className="pl-4" type="submit">
+                        <CheckMark />
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <div>{newUsername}</div>
+                )}
+              </div>
+            ) : <div>{profileUser?.username}</div>}
           </div>
         </div>
 
