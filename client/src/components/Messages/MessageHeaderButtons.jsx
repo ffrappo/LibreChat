@@ -110,6 +110,12 @@ export default function MessageHeaderButtons() {
               {localize(lang, 'com_ui_number_of_likes', numOfLikes ? numOfLikes.toString() : '0')}
             </div>
           </button>
+
+          {/*View Count Display*/}
+          <div>
+            {localize(lang, 'com_ui_number_of_views', numOfLikes ? numOfLikes.toString() : '0')}
+          </div>
+
         </div>
       </div>
       {/*Copied indicator*/}
