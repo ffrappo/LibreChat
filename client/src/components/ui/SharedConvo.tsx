@@ -34,6 +34,8 @@ export default function SharedConvo() {
   const likeConversationMutation = useLikeConversationMutation(conversationId || '');
   const navigate = useNavigate();
 
+  const viewCount = conversation?.viewCount;
+
   const plugins = (
     <>
       <Plugin className='' />{' '}
@@ -289,7 +291,7 @@ export default function SharedConvo() {
 
                       {/*View Count Display*/}
                       <div>
-                        {localize(lang, 'com_ui_number_of_views', numOfLikes ? numOfLikes.toString() : '0')}
+                        {localize(lang, 'com_ui_number_of_views', viewCount ? viewCount : '0')}
                       </div>
 
                     </div>

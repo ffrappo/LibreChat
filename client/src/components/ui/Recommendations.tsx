@@ -36,6 +36,7 @@ export default function Recommendations() {
   const [copied, setCopied] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
   const [numOfLikes, setNumOfLikes] = useState<number>(0);
+  const viewCount = convoData?.viewCount;
 
   // Message and user cache
   const [cache, setCache] = useState<{ user: TUser; messages: TMessage[] }[]>([]);
@@ -470,7 +471,7 @@ export default function Recommendations() {
 
                     {/*View Count Display*/}
                     <div>
-                      {localize(lang, 'com_ui_number_of_views', numOfLikes ? numOfLikes.toString() : '0')}
+                      {localize(lang, 'com_ui_number_of_views', viewCount ? viewCount.toString() : '0')}
                     </div>
 
                   </div>

@@ -14,6 +14,7 @@ export default function MessageHeaderButtons() {
   const { conversationId } = conversation;
   const updateConvoMutation = useUpdateConversationMutation(conversation?.conversationId);
   const likeConvoMutation = useLikeConversationMutation(conversation?.conversationId);
+  const viewCount = conversation?.viewCount;
 
   // UI states
   const [privateState, setPrivateState] = useState(false);
@@ -113,7 +114,7 @@ export default function MessageHeaderButtons() {
 
           {/*View Count Display*/}
           <div>
-            {localize(lang, 'com_ui_number_of_views', numOfLikes ? numOfLikes.toString() : '0')}
+            {localize(lang, 'com_ui_number_of_views', viewCount ? viewCount.toString() : '0')}
           </div>
 
         </div>
