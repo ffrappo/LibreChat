@@ -36,7 +36,8 @@ export default function Recommendations() {
   const [copied, setCopied] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
   const [numOfLikes, setNumOfLikes] = useState<number>(0);
-  const viewCount = convoData?.viewCount;
+  const [viewCount, setViewCount] = useState<number>(100);
+  // const viewCount = convoData?.viewCount;
 
   // Message and user cache
   const [cache, setCache] = useState<{ user: TUser; messages: TMessage[] }[]>([]);
@@ -307,6 +308,7 @@ export default function Recommendations() {
 
       setShareLink(window.location.host + `/chat/share/${convoData[convoIdx].conversationId}`);
       setNumOfLikes(convoData[convoIdx].likes);
+      setViewCount(convoData[convoIdx].viewCount);
 
       // set convo created data
       const isoTimeString = convoData[convoIdx].createdAt;
