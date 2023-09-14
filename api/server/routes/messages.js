@@ -7,7 +7,7 @@ const requireJwtAuth = require('../../middleware/requireJwtAuth');
 router.get('/:conversationId', requireJwtAuth, async (req, res) => {
   const { conversationId } = req.params;
   const convo = await getSharedConvo(conversationId);
-  if (convo.user !== req.user.id) {
+  if (convo?.user !== req.user.id) {
     //increment view count only if the user is not the owner of the conversation
     await increaseConvoViewCount(conversationId, req.user.id); //Added for https://github.com/aitok-ai/LibreChatInternal/issues/95
   }
