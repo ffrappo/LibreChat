@@ -7,6 +7,7 @@ const path = require('path');
 const cors = require('cors');
 const routes = require('./routes');
 const errorController = require('./controllers/ErrorController');
+const docchatRoutes = require('./routes/docchat')
 const passport = require('passport');
 const port = process.env.PORT || 3080;
 const host = process.env.HOST || 'localhost';
@@ -71,6 +72,7 @@ config.validate(); // Validate the config
   app.use('/api/plugins', routes.plugins);
   app.use('/api/config', routes.config);
   app.use('/api/leaderboard', routes.leaderboard);
+  app.use('/api/docchat', docchatRoutes);
 
   // static files
   app.get('/*', function (req, res) {
