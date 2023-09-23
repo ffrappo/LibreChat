@@ -37,6 +37,8 @@ export default function Recommendations() {
   const [liked, setLiked] = useState<boolean>(false);
   const [numOfLikes, setNumOfLikes] = useState<number>(0);
 
+  const [viewCount, setViewCount] = useState<number>(0);
+
   // Message and user cache
   const [cache, setCache] = useState<{ user: TUser; messages: TMessage[] }[]>([]);
   const [cacheIdx, setCacheIdx] = useState<number>(0);
@@ -283,6 +285,23 @@ export default function Recommendations() {
     }
   };
 
+  // increase view count
+  async function incrementViewCount(conversationId: string | undefined) {
+    try {
+      const response = await fetch(`/api/convos/${conversationId}/viewcount/increment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const responseObject = await response.json();
+      setViewCount(responseObject?.viewCount);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // Get recommendations on mount and on tab switch
   useEffect(() => {
     getRecommendations();
@@ -304,7 +323,7 @@ export default function Recommendations() {
         );
       }
 
-      setShareLink(window.location.host + `/chat/share/${convoData[convoIdx].conversationId}`);
+      setShareLink(window.location.protocol + '//' + window.location.host + `/chat/share/${convoData[convoIdx].conversationId}`);
       setNumOfLikes(convoData[convoIdx].likes);
 
       // set convo created data
@@ -324,6 +343,8 @@ export default function Recommendations() {
       } else {
         setLiked(false);
       }
+
+      incrementViewCount(convoData[convoIdx].conversationId); //increase view count for current conversation
 
       saveIdx();
     }
@@ -465,8 +486,12 @@ export default function Recommendations() {
                           <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
                         </svg>
                       </div>
-                      <div>{localize(lang, 'com_ui_number_of_likes', numOfLikes.toString())}</div>
+                      <div>{localize(lang, 'com_ui_number_of_likes', numOfLikes ? numOfLikes.toString() : '0')}</div>
                     </button>
+                    {/*View Count Display*/}
+                    <div>
+                      {localize(lang, 'com_ui_number_of_views', viewCount ? viewCount.toString() : '0')}
+                    </div>
                   </div>
                 </div>
               )}

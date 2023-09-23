@@ -14,6 +14,7 @@ export default function MessageHeaderButtons() {
   const { conversationId } = conversation;
   const updateConvoMutation = useUpdateConversationMutation(conversation?.conversationId);
   const likeConvoMutation = useLikeConversationMutation(conversation?.conversationId);
+  const { viewCount } = conversation;
 
   // UI states
   const [privateState, setPrivateState] = useState(false);
@@ -25,7 +26,7 @@ export default function MessageHeaderButtons() {
   // Copies conversation share link
   const copyShareLinkHandler = () => {
     if (copied) return;
-    navigator.clipboard.writeText(window.location.host + `/chat/share/${conversationId}`);
+    navigator.clipboard.writeText(window.location.protocol + '//' + window.location.host + `/chat/share/${conversationId}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -110,6 +111,10 @@ export default function MessageHeaderButtons() {
               {localize(lang, 'com_ui_number_of_likes', numOfLikes ? numOfLikes.toString() : '0')}
             </div>
           </button>
+          {/*View Count Display*/}
+          <div>
+            {localize(lang, 'com_ui_number_of_views', viewCount ? viewCount.toString() : '0')}
+          </div>
         </div>
       </div>
       {/*Copied indicator*/}
