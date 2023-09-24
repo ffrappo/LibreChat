@@ -20,8 +20,9 @@ async function searchStackOverflow(question) {
       const answerId = results[0].accepted_answer_id;
       if (answerId !== undefined) {
         const answerUrl = `https://stackoverflow.com/a/${answerId}`;
-        console.log('URL to the answer:', answerUrl);
-        open(answerUrl);
+        // console.log('URL to the answer:', answerUrl);
+        // open(answerUrl);
+        return answerUrl;
       } else {
         console.log('No accepted answer found for the question.');
       }
@@ -31,15 +32,24 @@ async function searchStackOverflow(question) {
   } catch (error) {
     console.error('Error occurred while searching Stack Overflow:', error);
   }
+  return null;
 }
 
-function askQuestion() {
-  rl.question('Enter your question (or type "exit" to quit): ', (question) => {
+async function askQuestion() {
+  rl.question('Enter your question (or type "exit" to quit): ', async (question) => {
     if (question.toLowerCase() === 'exit') {
       rl.close();
       return;
     }
-    searchStackOverflow(question);
+    try {
+      const url = await searchStackOverflow(question);
+      if (url) {
+        open(url);
+        rl.write(`Answer URL: ${url}\n`);
+      } else rl.write('No answer found for the question.\n');
+    } catch (error) {
+      rl.write(`Error: ${error.message}\n`);
+    }
     askQuestion();
   });
 }
