@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Label } from '~/components/ui';
 import { cn } from '~/utils';
@@ -8,9 +8,28 @@ import store from '~/store';
 
 function DocChatbot() {
   const [file, setFile] = useState<File | null>(null);
-  const [docEmbeddings, setDocEmbeddings] = useState(null);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [docEmbeddings, setDocEmbeddings] = useState<any>(null);  // Consider using a more specific type than any
+  const [uploadPercentage, setUploadPercentage] = useState<number>(0);
   const [widget, setWidget] = useRecoilState(store.widget);
+  const [userInput, setUserInput] = useState<string>('');
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [reference, setReference] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+    };
+
+    setIsDarkMode(mediaQuery.matches);
+
+    mediaQuery.addEventListener('change', handler);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handler);
+    };
+  }, []);
 
   // Function to call the backend
   const sendPDFToServer = async (file: File) => {
@@ -52,24 +71,54 @@ function DocChatbot() {
     }
   }
 
+  const askQuestion = async () => {
+    if (!userInput.trim()) {
+      console.log('Input is empty or only spaces');
+      return;
+    }
+    try {
+      const response = await axios.post('/api/docchat/questionandanswer', {
+        question: userInput,
+        // docId: YOUR_UNIQUE_DOC_ID // You'd get this from the server after processing the PDF
+      });
+
+      setAnswer(response.data.Answer);
+      setReference(response.data.Reference);
+
+    } catch (error) {
+      console.error('Error fetching the answer:', error.response?.data?.error || error.message);
+      alert('There was an error processing your question. Please try again.');
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    askQuestion();
+    setUserInput('');
+  };
+
   const content = () => (
     <div className="px-4 py-4 max-h-[450px] h-[60vh] overflow-y-auto md:h-[450px]">
       <div className="flex flex-col gap-4">
-        <Label htmlFor="fileUpload" className="text-left text-sm font-medium">Upload PDF</Label>
         <input
           type="file"
           id="fileUpload"
           accept=".pdf"
           onChange={(e) => setFile(e.target.files?.[0])}
+          style={{ display: 'none' }} // This hides the default input
           className={cn(
             'border rounded-md px-3 py-2',
             'hover:border-gray-500',
             'focus:border-blue-500 focus:outline-none'
           )}
         />
+        <label htmlFor="fileUpload" className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 transition-colors duration-200 cursor-pointer">
+          Upload PDF File
+        </label>
         {file && <p className="text-green-500">File uploaded: {file.name}</p>}
         <button
           onClick={processPDF}
+          style={{ textAlign: 'left' }}
           className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 transition-colors duration-200"
         >
                     Process PDF
@@ -93,6 +142,41 @@ function DocChatbot() {
             </div>
           </div>
         )}
+
+        {/* User Input Submission */}
+        <form onSubmit={handleSubmit} className="mt-4">
+          <h3 className="text-xl font-bold">Ask a question</h3>
+          <div className="flex">
+            <input
+              id="userInput"
+              type="text"
+              placeholder="Please enter your question..."
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              style={{
+                backgroundColor: isDarkMode ? '#333' : 'white', // Dark background for dark mode, white for light
+                color: isDarkMode ? 'white' : 'black'           // White text for dark mode, black for light
+              }}
+              className={cn(
+                'flex-grow border rounded-md px-3 py-2',
+                'hover:border-gray-500',
+                'focus:border-blue-500 focus:outline-none'
+              )}
+            />
+            <button type="submit" className="bg-green-500 text-white rounded-md px-4 py-2 ml-2 hover:bg-green-600 transition-colors duration-200">
+            Submit
+            </button>
+          </div>
+        </form>
+        {/* Display Answer and Reference */}
+        <div className="mt-4">
+          <h3 className="text-xl font-bold">Answer:</h3>
+          <p>{answer}</p>
+        </div>
+        <div className="mt-2">
+          <h3 className="text-lg font-semibold">Reference:</h3>
+          <p>{reference}</p>
+        </div>
       </div>
     </div>
   );
@@ -102,9 +186,7 @@ function DocChatbot() {
       content={content()}
       widget={true}
       visible={widget === 'docbot'}
-      switchToSimpleMode={() => {
-        setWidget('');
-      }}
+      switchToSimpleMode={() => setWidget('')}
     />
   );
 }
