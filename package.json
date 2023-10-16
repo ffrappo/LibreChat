@@ -41,6 +41,7 @@
   "dependencies": {
     "axios": "^1.4.0",
     "express-session": "^1.17.3",
+    "faiss-node": "^0.2.3",
     "langchain": "^0.0.91",
     "mongodb": "5.2",
     "multer": "^1.4.5-lts.1",

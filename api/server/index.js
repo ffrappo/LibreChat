@@ -24,7 +24,6 @@ config.validate(); // Validate the config
   await indexSync();
 
   const app = express();
-  app.use(errorController);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static(path.join(projectPath, 'dist')));
@@ -73,6 +72,7 @@ config.validate(); // Validate the config
   app.use('/api/config', routes.config);
   app.use('/api/leaderboard', routes.leaderboard);
   app.use('/api/docchat', docchatRoutes);
+  app.use(errorController);
 
   // static files
   app.get('/*', function (req, res) {

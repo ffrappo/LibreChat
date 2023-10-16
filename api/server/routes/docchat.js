@@ -1,12 +1,13 @@
 const express = require('express');
 const multer = require('multer');  // For handling multipart/form-data (file uploads)
-const FileToEmbedding = require('../../models/FileToEmbedding');  // Assuming processfiles.js is located in a 'scripts' directory
-
+const { FileToEmbedding, getAnswer } = require('../../models/FileToEmbedding');
 const router = express.Router();
 
+// Middleware setup for file uploads
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
 
+// PDF processing endpoint
 router.post('/process-pdf', upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
@@ -20,6 +21,22 @@ router.post('/process-pdf', upload.single('file'), async (req, res) => {
   } catch (error) {
     console.error('Error while processing file:', error);
     res.status(500).json({ error: 'Failed to process the file' });
+  }
+});
+
+// Question and answer endpoint
+router.post('/docchat-question', async (req, res) => {
+  try {
+    const { question } = req.body;
+
+    if (!question) {
+      return res.status(400).send('Question is required.');
+    }
+    const answer = await getAnswer(question);
+    res.json(answer);
+  } catch (error) {
+    console.error('Error getting the answer:', error);
+    res.status(500).send(`Failed to get the answer: ${error.message}`);
   }
 });
 

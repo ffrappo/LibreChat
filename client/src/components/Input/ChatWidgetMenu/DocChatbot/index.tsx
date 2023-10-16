@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Label } from '~/components/ui';
+// import { Label } from '~/components/ui';
 import { cn } from '~/utils';
 import EndpointOptionsPopover from '~/components/Endpoints/EndpointOptionsPopover';
 import { useRecoilState } from 'recoil';
@@ -8,7 +8,7 @@ import store from '~/store';
 
 function DocChatbot() {
   const [file, setFile] = useState<File | null>(null);
-  const [docEmbeddings, setDocEmbeddings] = useState<any>(null);  // Consider using a more specific type than any
+  const [setDocEmbeddings] = useState<any>(null);  // Consider using a more specific type than any
   const [uploadPercentage, setUploadPercentage] = useState<number>(0);
   const [widget, setWidget] = useRecoilState(store.widget);
   const [userInput, setUserInput] = useState<string>('');
@@ -77,9 +77,8 @@ function DocChatbot() {
       return;
     }
     try {
-      const response = await axios.post('/api/docchat/questionandanswer', {
+      const response = await axios.post('/api/docchat/docchat-question', {
         question: userInput,
-        // docId: YOUR_UNIQUE_DOC_ID // You'd get this from the server after processing the PDF
       });
 
       setAnswer(response.data.Answer);
