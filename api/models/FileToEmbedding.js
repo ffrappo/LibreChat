@@ -5,7 +5,7 @@ const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { FaissStore } = require('langchain/vectorstores/faiss');
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
 const { OpenAI } = require('langchain/llms/openai');
-const { v4: uuidv4 } = require('uuid'); // Used for generating unique filenames
+const { v4: uuidv4 } = require('uuid');
 const { PromptTemplate } = require('langchain/prompts');
 const { RetrievalQAChain, loadQAStuffChain } = require('langchain/chains');
 
@@ -14,7 +14,7 @@ require('dotenv').config();
 const storagePath = process.env.EMBEDDING_STORAGE_PATH;
 
 async function FileToEmbedding(fileBuffer) {
-  console.log('Starting FileToEmbedding function.'); // New log line
+  console.log('Starting FileToEmbedding function.');
 
   const tempFileName = path.join(__dirname, `${uuidv4()}.pdf`);
   try {
@@ -73,6 +73,8 @@ async function getAnswer(query) {
   });
 
   console.log(response.text);
+
+  return response.text
 }
 
 module.exports = { FileToEmbedding, getAnswer };

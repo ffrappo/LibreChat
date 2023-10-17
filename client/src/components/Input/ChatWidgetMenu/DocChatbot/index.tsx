@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import { Label } from '~/components/ui';
 import { cn } from '~/utils';
 import EndpointOptionsPopover from '~/components/Endpoints/EndpointOptionsPopover';
 import { useRecoilState } from 'recoil';
@@ -8,13 +7,14 @@ import store from '~/store';
 
 function DocChatbot() {
   const [file, setFile] = useState<File | null>(null);
-  const [setDocEmbeddings] = useState<any>(null);  // Consider using a more specific type than any
+  const [setDocEmbeddings] = useState<any>(null);
   const [uploadPercentage, setUploadPercentage] = useState<number>(0);
   const [widget, setWidget] = useRecoilState(store.widget);
   const [userInput, setUserInput] = useState<string>('');
   const [answer, setAnswer] = useState<string | null>(null);
-  const [reference, setReference] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -31,7 +31,6 @@ function DocChatbot() {
     };
   }, []);
 
-  // Function to call the backend
   const sendPDFToServer = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -76,17 +75,19 @@ function DocChatbot() {
       console.log('Input is empty or only spaces');
       return;
     }
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await axios.post('/api/docchat/docchat-question', {
         question: userInput,
       });
-
-      setAnswer(response.data.Answer);
-      setReference(response.data.Reference);
-
+      console.log('Server Response:', response.data);
+      setAnswer(response.data.answer);
     } catch (error) {
       console.error('Error fetching the answer:', error.response?.data?.error || error.message);
-      alert('There was an error processing your question. Please try again.');
+      setError('There was an error processing your question. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,7 +105,7 @@ function DocChatbot() {
           id="fileUpload"
           accept=".pdf"
           onChange={(e) => setFile(e.target.files?.[0])}
-          style={{ display: 'none' }} // This hides the default input
+          style={{ display: 'none' }}
           className={cn(
             'border rounded-md px-3 py-2',
             'hover:border-gray-500',
@@ -153,8 +154,8 @@ function DocChatbot() {
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               style={{
-                backgroundColor: isDarkMode ? '#333' : 'white', // Dark background for dark mode, white for light
-                color: isDarkMode ? 'white' : 'black'           // White text for dark mode, black for light
+                backgroundColor: isDarkMode ? '#333' : 'white',
+                color: isDarkMode ? 'white' : 'black',
               }}
               className={cn(
                 'flex-grow border rounded-md px-3 py-2',
@@ -167,14 +168,13 @@ function DocChatbot() {
             </button>
           </div>
         </form>
-        {/* Display Answer and Reference */}
+        {/* Display Answer*/}
         <div className="mt-4">
           <h3 className="text-xl font-bold">Answer:</h3>
-          <p>{answer}</p>
-        </div>
-        <div className="mt-2">
-          <h3 className="text-lg font-semibold">Reference:</h3>
-          <p>{reference}</p>
+          {isLoading ? <p>Loading answer...</p> :
+            answer ? <p>{answer}</p> :
+              error ? <p className="text-red-500">{error}</p> :
+                <p>Submit a question to get an answer.</p>}
         </div>
       </div>
     </div>
