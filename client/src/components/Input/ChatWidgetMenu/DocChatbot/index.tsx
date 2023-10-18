@@ -7,7 +7,7 @@ import store from '~/store';
 
 function DocChatbot() {
   const [file, setFile] = useState<File | null>(null);
-  const [setDocEmbeddings] = useState<any>(null);
+  // const [docEmbeddings, setDocEmbeddings] = useState<any>(null);
   const [uploadPercentage, setUploadPercentage] = useState<number>(0);
   const [widget, setWidget] = useRecoilState(store.widget);
   const [userInput, setUserInput] = useState<string>('');
@@ -60,13 +60,13 @@ function DocChatbot() {
     }
 
     try {
-      const newDocEmbeddings = await sendPDFToServer(file);
-      setDocEmbeddings(newDocEmbeddings);
+      await sendPDFToServer(file);
       alert('PDF processed successfully!');
     } catch (error) {
+      console.error('Error while processing PDF:', error.response?.data?.error || error.message);
       alert('There was an error processing the uploaded PDF. Please try again.');
     } finally {
-      setUploadPercentage(0); // Reset the progress bar after upload completes (success or fail)
+      setUploadPercentage(0);
     }
   }
 
