@@ -3,7 +3,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { OpenAI } = require('langchain/llms/openai');
 const { PDFLoader } = require('langchain/document_loaders/fs/pdf');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
+const { TokenTextSplitter } = require('langchain/text_splitter');
 const { loadSummarizationChain } = require('langchain/chains');
 // const { PromptTemplate } = require('langchain/prompts');
 
@@ -18,12 +18,12 @@ async function docSummarization(fileBuffer) {
     const loader = new PDFLoader(tempFileName, { splitPages: false });
     const docs = await loader.load();
 
-    const textSplitter = new RecursiveCharacterTextSplitter({
+    const textSplitter = new TokenTextSplitter({
       chunkOverlap: 10,
       chunkSize: 100,
     });
 
-    const inputDocs = await textSplitter.createDocuments(docs);
+    const inputDocs = await textSplitter.splitDocuments(docs);
 
     const model = new OpenAI({ temperature: 0 });
 

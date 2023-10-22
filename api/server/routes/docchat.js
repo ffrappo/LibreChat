@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { FileToEmbedding, getAnswer } = require('../../models/FileToEmbedding');
+const { docSummarization } = require('../../models/FileToEmbedding'); // <-- Make sure to set the correct path
 const router = express.Router();
 
 // Middleware setup for file uploads
@@ -16,37 +16,13 @@ router.post('/process-pdf', upload.single('file'), async (req, res) => {
     }
 
     const fileBuffer = req.file.buffer;
-
-    const embeddings = await FileToEmbedding(fileBuffer);
-    console.log('Embeddings from /process-pdf:', embeddings);
-    res.json({ embeddings: embeddings });
+    const summary = await docSummarization(fileBuffer);
+    console.log('Summary from /process-pdf:', summary);
+    res.json({ summary: summary });
 
   } catch (error) {
     console.error('Error while processing file:', error);
     res.status(500).json({ error: 'Failed to process the file' });
-  }
-});
-
-// Question and answer endpoint
-router.post('/docchat-question', async (req, res) => {
-  try {
-    const { question } = req.body;
-
-    if (!question) {
-      console.log('No question provided in /docchat-question.');
-      return res.status(400).send('Question is required.');
-    }
-
-    console.log('Question received in /docchat-question:', question);
-
-    const answer = await getAnswer(question);
-    console.log('Answer retrieved:', answer);
-
-    res.json({ answer: answer });
-
-  } catch (error) {
-    console.error('Error getting the answer:', error);
-    res.status(500).send(`Failed to get the answer: ${error.message}`);
   }
 });
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Label, SelectDropDown } from '~/components/ui';
 import { cn } from '~/utils';
@@ -7,7 +6,7 @@ import { useRecoilState } from 'recoil';
 import store from '~/store';
 import axios from 'axios';
 
-const defaultTextProps = '...'; // As you have it in your CodingAssistant
+const defaultTextProps = '...'; // As in CodingAssistant
 
 function DocChatbot() {
   const [file, setFile] = useState<File | null>(null);
@@ -34,7 +33,7 @@ function DocChatbot() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files?.[0];
