@@ -70,7 +70,7 @@ export default {
     'All AI conversations in one place. Pay per call and not per month',
   com_ui_writing_assistant: 'Writing Assistant',
   com_ui_coding_assistant: 'Coding Assistant',
-  com_ui_doc_chatbot: 'Doc Q&A',
+  com_ui_doc_assist: 'Doc Assistant',
   com_ui_ask_me_anything: 'Ask Me Anything',
   com_ui_referrals_leaderboard: 'Referrals Leaderboard',
   com_ui_copied_success: 'Copied',

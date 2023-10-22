@@ -214,7 +214,7 @@ export default function Nav({ navVisible, setNavVisible }) {
 
   const openWritingAssistantHandler = openWidgetHandler('wa');
   const openCodingAssistantHandler = openWidgetHandler('ca');
-  const openDocChatbotHandler = openWidgetHandler('docbot');
+  const openDocAssistantHandler = openWidgetHandler('docassist');
   const openAskMeAnythingHandler = openWidgetHandler('ama');
   const openLeaderboardHandler = () => navigate('/leaderboard');
   const openHomepageHandler = () => navigate('/home');
@@ -327,8 +327,8 @@ export default function Nav({ navVisible, setNavVisible }) {
               <NavLink
                 className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-700"
                 svg={() => <ComputerIcon />}
-                text={localize(lang, 'com_ui_doc_chatbot')}
-                clickHandler={ user ? openDocChatbotHandler : navigateToRegister }
+                text={localize(lang, 'com_ui_doc_assist')}
+                clickHandler={ user ? openDocAssistantHandler : navigateToRegister }
               />
               <NavLink
                 className="flex w-full cursor-pointer items-center gap-3 rounded-none px-3 py-3 text-sm text-white transition-colors duration-200 hover:bg-gray-700"

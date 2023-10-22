@@ -5,7 +5,7 @@ import EndpointOptionsPopover from '~/components/Endpoints/EndpointOptionsPopove
 import { useRecoilState } from 'recoil';
 import store from '~/store';
 
-function DocChatbot() {
+function DocAssistant() {
   const [file, setFile] = useState<File | null>(null);
   // const [docEmbeddings, setDocEmbeddings] = useState<any>(null);
   const [uploadPercentage, setUploadPercentage] = useState<number>(0);
@@ -190,4 +190,4 @@ function DocChatbot() {
   );
 }
 
-export default DocChatbot;
+export default DocAssistant;
