@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Label, SelectDropDown } from '~/components/ui';
+import { Label } from '~/components/ui';
+// import { Label, SelectDropDown } from '~/components/ui';
 import { cn } from '~/utils';
 import EndpointOptionsPopover from '~/components/Endpoints/EndpointOptionsPopover';
 import { useRecoilState } from 'recoil';
@@ -14,22 +15,35 @@ function DocChatbot() {
   const [widget, setWidget] = useRecoilState(store.widget);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const MAX_FILE_SIZE_MB = 10; // Change according to your requirements.
+  const MAX_FILE_SIZE_MB = 10;
 
-  const processPDF = async (file: File) => {
+  const storePDF = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
     setIsLoading(true);
     try {
-      const response = await axios.post('/api/docchat/process-pdf', formData, {
+      const response = await axios.post('/api/docchat/store-pdf', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+      return response.data.fileId;
+    } catch (error) {
+      setErrorMessage('Error storing the PDF. Please try again.');
+      console.error('Error storing the PDF:', error.response?.data?.error || error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSummary = async (fileId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`/api/docchat/process-pdf/${fileId}`);
       setSummary(response.data.summary);
     } catch (error) {
-      setErrorMessage('Error processing the PDF. Please try again.');
-      console.error('Error processing the PDF:', error.response?.data?.error || error.message);
+      setErrorMessage('Error fetching the summary. Please try again.');
+      console.error('Error fetching the summary:', error.response?.data?.error || error.message);
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +63,16 @@ function DocChatbot() {
 
       setErrorMessage(null);
       setFile(selectedFile);
-      processPDF(selectedFile);
+      storePDF(selectedFile);
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    if (file) {
+      const fileId = await storePDF(file);
+      if (fileId) {
+        fetchSummary(fileId);
+      }
     }
   };
 
@@ -64,18 +87,21 @@ function DocChatbot() {
         aria-label="Upload PDF file"
       />
       <label htmlFor="fileUpload" className="bg-gray-600 text-white rounded-md px-4 py-2 hover:bg-gray-700 focus:bg-gray-600 transition-colors duration-200 cursor-pointer">
-                Submit PDF File
+        Submit PDF File
       </label>
       {file && <div className="border border-gray-300 p-3 rounded-md">
         <p>Selected File: {file.name}</p>
       </div>}
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       <Label htmlFor="summary" className="text-left text-sm font-medium">
-                Summary:
+        Summary:
       </Label>
       <div className={cn(defaultTextProps, 'flex max-h-[300px] min-h-[100px] w-full resize-none px-3 py-2')}>
         {isLoading ? 'Generating summary...' : summary}
       </div>
+      <button onClick={handleGenerateSummary} className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 focus:bg-blue-500 transition-colors duration-200 cursor-pointer">
+        Generate Summary
+      </button>
     </div>
   );
 
