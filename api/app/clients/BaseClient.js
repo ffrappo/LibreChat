@@ -5,6 +5,7 @@ const { ChatOpenAI } = require('langchain/chat_models/openai');
 const { loadSummarizationChain } = require('langchain/chains');
 const { refinePrompt } = require('./prompts/refinePrompt');
 const { getConvo, getMessages, saveMessage, updateMessage, saveConvo } = require('../../models');
+const axios = require('axios');
 
 class BaseClient {
   constructor(apiKey, options = {}) {
@@ -26,8 +27,13 @@ class BaseClient {
     throw new Error('Method \'getCompletion\' must be implemented.');
   }
 
-  async sendCompletion() {
-    throw new Error('Method \'sendCompletion\' must be implemented.');
+  async sendCompletion(payload) {
+    // Before processing the payload with OpenAI, check if it's a DocAssistant message:
+    if (payload.startsWith('Type: DocAssistant')) {
+      return 'Sorry, but this payload is not supposed to be processed here.';
+    }
+
+    // ... existing implementation of sending message to OpenAI model ...
   }
 
   getSaveOptions() {
@@ -84,6 +90,8 @@ class BaseClient {
   }
 
   async handleStartMethods(message, opts) {
+    console.log('Handling message:', message);  // Add logging to trace the incoming message
+
     const {
       user,
       conversationId,
@@ -99,6 +107,9 @@ class BaseClient {
       conversationId,
       text: message,
     });
+
+    // Assuming processMessage is a method of the same class
+    await this.processMessage(userMessage.text, { user, saveOptions });
 
     if (typeof opts?.getIds === 'function') {
       opts.getIds({
@@ -545,6 +556,41 @@ class BaseClient {
     // Sum the number of tokens in all properties and add `tokensPerMessage` for metadata
     return propertyTokenCounts.reduce((a, b) => a + b, tokensPerMessage);
   }
+
+  async sendToBackendEndpoint(data) {
+    try {
+      const response = await axios.post('http://localhost:3080/api/docchat/processMessageForSummary', data);
+      return response.data;
+    } catch (error) {
+      console.error('Error sending data to backend:', error);
+      throw error;
+    }
+  }
+
+  async processMessage(message, options) {
+    console.log('Processing message:', message);  // Add logging for traceability
+
+    if (message.includes('Type: DocAssistant')) {
+      console.log('Message contains \'Type: DocAssistant\'. Sending to backend...');
+      const response = await fetch('http://localhost:3080/api/docchat/processMessageForSummary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message, options })
+      });
+      const result = await response.json();
+      return result;
+    } else {
+      console.log('Message does NOT contain \'Type: DocAssistant\'. Sending to OpenAI...');
+      // Assuming the logic for sending to OpenAI is here
+      // ...
+    }
+  }
 }
+
+//  in the main logic or wherever using this client, call:
+// const client = new BaseClient(YOUR_OPENAI_API_KEY);
+// const response = await client.processMessage(YOUR_INPUT_MESSAGE);
 
 module.exports = BaseClient;
