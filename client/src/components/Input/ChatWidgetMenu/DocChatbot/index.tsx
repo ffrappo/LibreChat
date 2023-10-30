@@ -12,6 +12,8 @@ function DocChatbot() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [setText] = useRecoilState(store.text);
+  // need to keep text to render the DocAssistant frontend?
+  // const [text, setText] = useRecoilState(store.text);
   const [widget, setWidget] = useRecoilState(store.widget);
   const MAX_FILE_SIZE_MB = 10;
 
