@@ -61,7 +61,9 @@ router.post('/', requireJwtAuth, async (req, res) => {
     });
     let dailyQuota = (quota[endpointOption.modelOptions.model]).toFixed(0);
     if (messagesCount >= dailyQuota) {
-      return handleError(res, { text: `超出了您的使用额度(${endpointOption.modelOptions.model}模型每天${dailyQuota}条消息)，通过此网页可以购买更多额度：https://iaitok.com/pay` });
+      return handleError(res, {
+        text: `超出了您的使用额度(${endpointOption.modelOptions.model}模型每天${dailyQuota}条消息)。由于我们需要支付每月上万人民币的OpenAI API费用，请通过此网页可以购买更多额度：https://iaitok.com/pay 以使我们能够持续提供ChatGPT服务`
+      });
     }
   }
 
