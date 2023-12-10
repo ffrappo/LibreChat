@@ -2245,7 +2245,7 @@
     mongodb "^4.5.0"
     pify "^5.0.0"
 
-"@librechat/backend@file:/Users/Diameter/Documents/GitHub/aitok_librechat/api":
+"@librechat/backend@file:/home/lushu/Work/AiTok/LibreChat/Branches/shu_speech/api":
   version "0.5.3"
   resolved "file:api"
   dependencies:
@@ -2286,14 +2286,14 @@
     sanitize "^2.1.2"
     sharp "^0.32.1"
 
-"@librechat/data-provider@*", "@librechat/data-provider@file:/Users/Diameter/Documents/GitHub/aitok_librechat/packages/data-provider":
+"@librechat/data-provider@*", "@librechat/data-provider@file:/home/lushu/Work/AiTok/LibreChat/Branches/shu_speech/packages/data-provider":
   version "0.1.0"
   resolved "file:packages/data-provider"
   dependencies:
     "@tanstack/react-query" "^4.28.0"
     axios "^1.3.4"
 
-"@librechat/frontend@file:/Users/Diameter/Documents/GitHub/aitok_librechat/client":
+"@librechat/frontend@file:/home/lushu/Work/AiTok/LibreChat/Branches/shu_speech/client":
   version "0.5.3"
   resolved "file:client"
   dependencies:

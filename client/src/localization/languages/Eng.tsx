@@ -297,6 +297,7 @@ export default {
   com_nav_file_ext_json: 'json (.json)',
   com_nav_file_ext_csv: 'csv (.csv)',
   com_msg_edit: 'edit',
+  com_msg_playback: 'play back',
   com_msg_copy_to_clipboard: 'Copy to clipboard',
   com_msg_copied_to_clipboard: 'Copied to clipboard',
   com_msg_save_submit: 'Save & Submit',

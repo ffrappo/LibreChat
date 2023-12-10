@@ -5,11 +5,16 @@ import CheckMark from '../svg/CheckMark';
 import EditIcon from '../svg/EditIcon';
 import LikeIcon from '../svg/LikeIcon';
 import RegenerateIcon from '../svg/RegenerateIcon';
+import EyeIcon from '../svg/EyeIcon';
 import store from '~/store';
 import { useRecoilValue } from 'recoil';
 import { localize } from '~/localization/Translation';
+import LightBulbIcon from '../svg/LightBulbIcon';
+import { MessagesSquared } from '../svg';
+import LightningIcon from '../svg/LightningIcon';
 
 export default function HoverButtons({
+  error,
   isEditting,
   enterEdit,
   copyToClipboard,
@@ -18,11 +23,14 @@ export default function HoverButtons({
   isSubmitting,
   isLiked,
   message,
-  regenerate
+  regenerate,
+  playbackMessage,
+  stopPlaybackMessage
 }) {
   const lang = useRecoilValue(store.lang);
   const { endpoint } = conversation;
   const [isCopied, setIsCopied] = React.useState(false);
+  const [playbackStatus, setPlaybackStatus] = React.useState({ isPaused: false, isStopped: true });
 
   const branchingSupported =
     // azureOpenAI, openAI, chatGPTBrowser support branching, so edit enabled // 5/21/23: Bing is allowing editing and Message regenerating
@@ -96,6 +104,26 @@ export default function HoverButtons({
         {isCopied ? <CheckMark /> : <Clipboard />}
       </button>
 
+      <br/>
+      <button
+        className="hover-button active rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
+        onClick={() => playbackMessage(error, playbackStatus, setPlaybackStatus)}
+        type="button"
+        title={playbackStatus.isPaused ? localize(lang, 'com_msg_playback') : '暂停播放'}
+      >
+        {(playbackStatus.isStopped && (!playbackStatus.isPaused)) ||
+          ((!playbackStatus.isStopped) && playbackStatus.isPaused) ||
+          (playbackStatus.isStopped && (!playbackStatus.isPaused))
+          ? <EyeIcon /> : <LightBulbIcon/> }
+      </button>
+      <button
+        className="hover-button active rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
+        onClick={() => stopPlaybackMessage(playbackStatus, setPlaybackStatus)}
+        type="button"
+        title={playbackStatus.isPaused ? localize(lang, 'com_msg_playback') : '暂停播放'}
+      >
+        { !playbackStatus.isStopped ? <MessagesSquared /> : <LightningIcon/> }
+      </button>
     </div>
   );
 }

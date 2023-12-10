@@ -36,6 +36,9 @@ export default function Message({
   const [abortScroll, setAbort] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true); // eslint-disable-line
+  // const {isStopped, setStopped} = useState(false);
+  // const {isPaused, setPaused} = useState(false);
+  const synth = window.speechSynthesis;
   const textEditor = useRef(null);
   const last = !message?.children?.length;
   const edit = message.messageId == currentEditId;
@@ -120,6 +123,74 @@ export default function Message({
     setTimeout(() => {
       setIsCopied(false);
     }, 3000);
+  };
+
+  const speak = (msg) => {
+    let u = new SpeechSynthesisUtterance();
+    u.lang = 'zh-CN';
+    u.text = msg;
+    // console.log(msg);
+    // u.onend = (event) => {
+    //   set
+    // }
+    synth.speak(u);
+  };
+
+  const pause = () => {
+    synth.pause();
+  }
+
+  const resume = () => {
+    synth.resume();
+  }
+
+  const stop = () => {
+    synth.cancel();
+  }
+
+  const playbackMessage = (errorMessage, status, setStatus) => {
+    let { isStopped, isPaused } = status;
+    console.log('paly back status: ' + isStopped + ' ' + isPaused);
+    if (isStopped && (!isPaused)) {
+      console.log('Click on play: (1)' + isStopped + ' ' + isPaused);
+      isStopped = false;
+      setStatus({ isStopped, isPaused });
+      if (error) {
+        // let errmsg = getError(text);
+        // console.log(getError(text))
+        speak(errorMessage);
+      } else {
+        speak(text);
+      }
+    } else if ((!isStopped) && (!isPaused)) {
+      console.log('Click on play: (2)' + isStopped + ' ' + isPaused);
+      isPaused = true;
+      setStatus({ isStopped, isPaused });
+      pause();
+    } else if ((!isStopped) && isPaused) {
+      console.log('Click on play: (3)' + isStopped + ' ' + isPaused);
+      isPaused = false;
+      setStatus({ isStopped, isPaused });
+      resume();
+    } else {
+      console.log('Click on play: (3)' + isStopped + ' ' + isPaused);
+      // console.log("paly back status: " + isStopped + " " + isPaused);
+    }
+  };
+
+  const stopPlaybackMessage = (status, setStatus) => {
+    let { isStopped, isPaused } = status;
+    console.log('(stop) paly back status: ' + isStopped + ' ' + isPaused);
+    if (isStopped) {
+      console.log('Click on stop: (1)' + isStopped + ' ' + isPaused);
+      // pass
+    } else {
+      console.log('Click on stop: (2)' + isStopped + ' ' + isPaused);
+      isStopped = true;
+      isPaused = false;
+      setStatus({ isStopped, isPaused });
+      stop();
+    }
   };
 
   const { token } = useAuthContext();
@@ -289,6 +360,7 @@ export default function Message({
             </div>
 
             <HoverButtons
+              error={getError(text)}
               isEditting={edit}
               isSubmitting={isSubmitting}
               message={message}
@@ -298,6 +370,8 @@ export default function Message({
               copyToClipboard={copyToClipboard}
               handleLikeClick={handleLikeClick}
               isLiked={isLiked}
+              playbackMessage={playbackMessage}
+              stopPlaybackMessage={stopPlaybackMessage}
             />
 
             <SubRow subclasses="switch-container">
