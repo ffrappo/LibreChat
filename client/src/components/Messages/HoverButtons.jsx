@@ -5,12 +5,12 @@ import CheckMark from '../svg/CheckMark';
 import EditIcon from '../svg/EditIcon';
 import LikeIcon from '../svg/LikeIcon';
 import RegenerateIcon from '../svg/RegenerateIcon';
-import EyeIcon from '../svg/EyeIcon';
+import Pause from '../svg/Pause';
+import Play from '../svg/Play';
+import Stop from '../svg/Stop';
 import store from '~/store';
 import { useRecoilValue } from 'recoil';
 import { localize } from '~/localization/Translation';
-import LightBulbIcon from '../svg/LightBulbIcon';
-import { MessagesSquared } from '../svg';
 
 export default function HoverButtons({
   error,
@@ -102,7 +102,7 @@ export default function HoverButtons({
       >
         {isCopied ? <CheckMark /> : <Clipboard />}
       </button>
-
+      <br/>
       <button
         className="hover-button active rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
         onClick={() => playbackMessage(error, playbackStatus, setPlaybackStatus)}
@@ -112,7 +112,7 @@ export default function HoverButtons({
         {(playbackStatus.isStopped && (!playbackStatus.isPaused)) ||
           ((!playbackStatus.isStopped) && playbackStatus.isPaused) ||
           (playbackStatus.isStopped && (!playbackStatus.isPaused))
-          ? <EyeIcon /> : <LightBulbIcon/> }
+          ? <Play /> : <Pause/> }
       </button>
       <button
         className="hover-button active rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
@@ -121,7 +121,7 @@ export default function HoverButtons({
         disabled={playbackStatus.isStopped}
         title={localize(lang, 'com_msg_playback_stop')}
       >
-        <MessagesSquared/>
+        <Stop />
       </button>
     </div>
   );
