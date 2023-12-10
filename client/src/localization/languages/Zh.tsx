@@ -291,6 +291,8 @@ export default {
   com_nav_file_ext_csv: 'csv文件 (.csv)',
   com_msg_edit: '编辑',
   com_msg_playback: '播放',
+  com_msg_playback_pause: '暂停播放',
+  com_msg_playback_stop: '停止播放',
   com_msg_copy_to_clipboard: '复制到剪贴板',
   com_msg_copied_to_clipboard: '已经复制到剪贴板',
   com_msg_save_submit: '保存并提交',

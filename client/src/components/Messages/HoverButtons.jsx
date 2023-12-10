@@ -11,7 +11,6 @@ import { useRecoilValue } from 'recoil';
 import { localize } from '~/localization/Translation';
 import LightBulbIcon from '../svg/LightBulbIcon';
 import { MessagesSquared } from '../svg';
-import LightningIcon from '../svg/LightningIcon';
 
 export default function HoverButtons({
   error,
@@ -104,12 +103,11 @@ export default function HoverButtons({
         {isCopied ? <CheckMark /> : <Clipboard />}
       </button>
 
-      <br/>
       <button
         className="hover-button active rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
         onClick={() => playbackMessage(error, playbackStatus, setPlaybackStatus)}
         type="button"
-        title={playbackStatus.isPaused ? localize(lang, 'com_msg_playback') : '暂停播放'}
+        title={(playbackStatus.isPaused || playbackStatus.isStopped) ? localize(lang, 'com_msg_playback') : localize(lang, 'com_msg_playback_pause')}
       >
         {(playbackStatus.isStopped && (!playbackStatus.isPaused)) ||
           ((!playbackStatus.isStopped) && playbackStatus.isPaused) ||
@@ -120,9 +118,10 @@ export default function HoverButtons({
         className="hover-button active rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
         onClick={() => stopPlaybackMessage(playbackStatus, setPlaybackStatus)}
         type="button"
-        title={playbackStatus.isPaused ? localize(lang, 'com_msg_playback') : '暂停播放'}
+        disabled={playbackStatus.isStopped}
+        title={localize(lang, 'com_msg_playback_stop')}
       >
-        { !playbackStatus.isStopped ? <MessagesSquared /> : <LightningIcon/> }
+        <MessagesSquared/>
       </button>
     </div>
   );

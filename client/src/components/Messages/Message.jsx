@@ -152,6 +152,7 @@ export default function Message({
   const playbackMessage = (errorMessage, status, setStatus) => {
     let { isStopped, isPaused } = status;
     if (isStopped && (!isPaused)) {
+      console.log('play 1: ' + isStopped + ' ' + isPaused)
       isStopped = false;
       setStatus({ isStopped, isPaused });
       if (error) {
@@ -162,14 +163,17 @@ export default function Message({
         speak(text, setStatus);
       }
     } else if ((!isStopped) && (!isPaused)) {
+      console.log('play 2: ' + isStopped + ' ' + isPaused)
       isPaused = true;
       setStatus({ isStopped, isPaused });
       pause();
     } else if ((!isStopped) && isPaused) {
+      console.log('play 3: ' + isStopped + ' ' + isPaused)
       isPaused = false;
       setStatus({ isStopped, isPaused });
       resume();
     } else {
+      console.log('play 4: ' + isStopped + ' ' + isPaused)
       console.log('paly back status: ' + isStopped + ' ' + isPaused);
     }
   };
@@ -177,8 +181,10 @@ export default function Message({
   const stopPlaybackMessage = (status, setStatus) => {
     let { isStopped, isPaused } = status;
     if (isStopped) {
+      console.log('stop 1: ' + isStopped + ' ' + isPaused)
       // pass
     } else {
+      console.log('stop 2: ' + isStopped + ' ' + isPaused)
       isStopped = true;
       isPaused = false;
       setStatus({ isStopped, isPaused });
