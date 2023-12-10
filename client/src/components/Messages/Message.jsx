@@ -125,14 +125,15 @@ export default function Message({
     }, 3000);
   };
 
-  const speak = (msg) => {
+  const speak = (msg, updateHoverButtons) => {
     let u = new SpeechSynthesisUtterance();
     u.lang = 'zh-CN';
     u.text = msg;
+    u.cb = updateHoverButtons
     // console.log(msg);
-    // u.onend = (event) => {
-    //   set
-    // }
+    u.onend = (event) => {
+      event.utterance.cb({ isStopped: true, isPaused: false });
+    }
     synth.speak(u);
   };
 
@@ -150,42 +151,34 @@ export default function Message({
 
   const playbackMessage = (errorMessage, status, setStatus) => {
     let { isStopped, isPaused } = status;
-    console.log('paly back status: ' + isStopped + ' ' + isPaused);
     if (isStopped && (!isPaused)) {
-      console.log('Click on play: (1)' + isStopped + ' ' + isPaused);
       isStopped = false;
       setStatus({ isStopped, isPaused });
       if (error) {
         // let errmsg = getError(text);
         // console.log(getError(text))
-        speak(errorMessage);
+        speak(errorMessage, setStatus);
       } else {
-        speak(text);
+        speak(text, setStatus);
       }
     } else if ((!isStopped) && (!isPaused)) {
-      console.log('Click on play: (2)' + isStopped + ' ' + isPaused);
       isPaused = true;
       setStatus({ isStopped, isPaused });
       pause();
     } else if ((!isStopped) && isPaused) {
-      console.log('Click on play: (3)' + isStopped + ' ' + isPaused);
       isPaused = false;
       setStatus({ isStopped, isPaused });
       resume();
     } else {
-      console.log('Click on play: (3)' + isStopped + ' ' + isPaused);
-      // console.log("paly back status: " + isStopped + " " + isPaused);
+      console.log('paly back status: ' + isStopped + ' ' + isPaused);
     }
   };
 
   const stopPlaybackMessage = (status, setStatus) => {
     let { isStopped, isPaused } = status;
-    console.log('(stop) paly back status: ' + isStopped + ' ' + isPaused);
     if (isStopped) {
-      console.log('Click on stop: (1)' + isStopped + ' ' + isPaused);
       // pass
     } else {
-      console.log('Click on stop: (2)' + isStopped + ' ' + isPaused);
       isStopped = true;
       isPaused = false;
       setStatus({ isStopped, isPaused });
